@@ -6,11 +6,11 @@
 /*   By: jazarago <jazarago@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 11:13:18 by jazarago          #+#    #+#             */
-/*   Updated: 2024/11/27 12:17:43 by jazarago         ###   ########.fr       */
+/*   Updated: 2024/12/16 13:20:06 by jazarago         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "functions.h"
+#include "philosophers.h"
 
 int ft_mini_atoi(char *str)
 {
