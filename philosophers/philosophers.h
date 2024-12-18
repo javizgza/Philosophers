@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   functions.h                                        :+:      :+:    :+:   */
+/*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jazarago <jazarago@student.42.fr>          +#+  +:+       +#+        */
+/*   By: javierzaragozatejeda <javierzaragozatej    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 11:17:00 by jazarago          #+#    #+#             */
-/*   Updated: 2024/12/16 13:07:17 by jazarago         ###   ########.fr       */
+/*   Updated: 2024/12/18 11:11:35 by javierzarag      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ typedef struct s_philoutils
     int              time_to_die;
     int              time_to_eat;
     int              time_to_sleep;
+    int              meals;
     pthread_mutex_t  *right_fork;
     pthread_mutex_t  *left_fork;
     pthread_mutex_t  *food_dish;
@@ -51,5 +52,8 @@ int ft_mini_atoi(char *str);
 int	check_all_args(char **argv);
 int ft_atoi(char *str);
 int check_if_num(char *str);
+void    *philos_routine(void *arg);
+void    run_inputs(t_philoutils *inputs, char **argv);
+void    run_program(t_mutex *program, t_philoutils *inputs);
 
 #endif

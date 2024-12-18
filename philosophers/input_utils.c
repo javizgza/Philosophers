@@ -3,27 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   input_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jazarago <jazarago@student.42.fr>          +#+  +:+       +#+        */
+/*   By: javierzaragozatejeda <javierzaragozatej    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 11:13:18 by jazarago          #+#    #+#             */
-/*   Updated: 2024/12/16 13:20:06 by jazarago         ###   ########.fr       */
+/*   Updated: 2024/12/18 11:11:35 by javierzarag      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
-
-int ft_mini_atoi(char *str)
-{
-    int res;
-
-    res = 0;
-    while (*str >= '0' && *str <= '9')
-    {
-        res = res * 10 + *str - '0';
-        str++;
-    }
-    return (res);
-}
 
 int	check_all_args(char **argv)
 {
@@ -53,4 +40,17 @@ int check_if_num(char *str)
 		i++;
 	}
 	return (0);
+}
+
+int ft_mini_atoi(char *str)
+{
+    int res;
+
+    res = 0;
+    while (*str >= '0' && *str <= '9')
+    {
+        res = res * 10 + *str - '0';
+        str++;
+    }
+    return (res);
 }
