@@ -6,7 +6,7 @@
 /*   By: javierzaragozatejeda <javierzaragozatej    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 11:13:18 by jazarago          #+#    #+#             */
-/*   Updated: 2024/12/18 11:11:35 by javierzarag      ###   ########.fr       */
+/*   Updated: 2024/12/18 16:51:49 by javierzarag      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	check_all_args(char **argv)
 
 int check_if_num(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (str[i] != '\0')
@@ -44,13 +44,13 @@ int check_if_num(char *str)
 
 int ft_mini_atoi(char *str)
 {
-    int res;
+	int	res;
 
-    res = 0;
-    while (*str >= '0' && *str <= '9')
-    {
-        res = res * 10 + *str - '0';
-        str++;
-    }
-    return (res);
+	res = 0;
+	while (*str >= '0' && *str <= '9')
+	{
+		res = res * 10 + *str - '0';
+		str++;
+	}
+	return (res);
 }
