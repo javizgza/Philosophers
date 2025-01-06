@@ -6,7 +6,7 @@
 /*   By: javierzaragozatejeda <javierzaragozatej    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 11:55:57 by jazarago          #+#    #+#             */
-/*   Updated: 2025/01/04 19:18:57 by javierzarag      ###   ########.fr       */
+/*   Updated: 2025/01/06 17:38:35 by javierzarag      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,19 @@ long	get_current_time(void)
 	return (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
 }
 
+void precise_usleep(long duration_ms) {
+    long start_time = get_current_time();
+    while ((get_current_time() - start_time) < duration_ms) {
+        usleep(100); // Sleep for short intervals to avoid busy waiting
+    }
+}
+
 void	*death_logic(void *arg)
 {
 	t_mutex	*program;
 	
 	program = (t_mutex *)arg;
-	usleep(1000); // Add a small delay to allow philosophers to start
+	usleep(5000); // Increase the delay to allow philosophers to start
 	while (1)
 	{
 		for (int i = 0; i < program->philos_num; i++)
@@ -66,6 +73,11 @@ void    *philos_routine(void *arg)
 
 	philosopher = (t_philoutils *)arg;
 	philosopher->last_meal_time = get_current_time(); // Initialize last_meal_time correctly
+
+	// Add a more structured delay for odd-numbered philosophers
+	if (philosopher->who % 2 != 0)
+		usleep(1000);
+
 	while (1)
 	{
 		pthread_mutex_lock(philosopher->program->dead_value_lock);
@@ -75,17 +87,9 @@ void    *philos_routine(void *arg)
 			break;
 		}
 		pthread_mutex_unlock(philosopher->program->dead_value_lock);
-
-		if (philosopher->who % 2 == 0)
-		{
-			pthread_mutex_lock(philosopher->right_fork);
-			pthread_mutex_lock(philosopher->left_fork);
-		}
-		else
-		{
-			pthread_mutex_lock(philosopher->left_fork);
-			pthread_mutex_lock(philosopher->right_fork);
-		}
+		precise_usleep(10);
+		pthread_mutex_lock(philosopher->right_fork);
+		pthread_mutex_lock(philosopher->left_fork);
 		pthread_mutex_lock(philosopher->print);
 		printf("%d has taken a fork\n", philosopher->who);
 		printf("%d has taken a fork\n", philosopher->who);
@@ -95,7 +99,7 @@ void    *philos_routine(void *arg)
 		pthread_mutex_unlock(philosopher->left_fork);*/
 		pthread_mutex_lock(&philosopher->meal_time_lock);
 		philosopher->last_meal_time = get_current_time();
-		usleep(philosopher->time_to_eat * 1000);
+		precise_usleep(philosopher->time_to_eat);
 		meals_eaten++;
 		pthread_mutex_unlock(&philosopher->meal_time_lock);
 		pthread_mutex_unlock(philosopher->right_fork);
@@ -105,7 +109,7 @@ void    *philos_routine(void *arg)
 		pthread_mutex_lock(philosopher->print);
 		printf("%d is sleeping\n", philosopher->who);
 		pthread_mutex_unlock(philosopher->print);
-		usleep(philosopher->time_to_sleep * 1000);
+		precise_usleep(philosopher->time_to_sleep);
 		pthread_mutex_lock(philosopher->print);
 		printf("%d is thinking\n", philosopher->who);
 		pthread_mutex_unlock(philosopher->print);

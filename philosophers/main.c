@@ -6,7 +6,7 @@
 /*   By: javierzaragozatejeda <javierzaragozatej    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:56:50 by jazarago          #+#    #+#             */
-/*   Updated: 2025/01/04 18:16:26 by javierzarag      ###   ########.fr       */
+/*   Updated: 2025/01/06 17:19:43 by javierzarag      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	main(int argc, char **argv)
 		if (pthread_create(&threads[i], NULL, philos_routine, &inputs[i]) != 0)
 			return (1);
 		i++;
-	}
+	} // Increase the delay to ensure all threads have started
 	i = 0;
 	while (i < inputs[0].philos_num)
 	{
