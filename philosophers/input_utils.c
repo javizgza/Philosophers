@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: javierzaragozatejeda <javierzaragozatej    +#+  +:+       +#+        */
+/*   By: jazarago <jazarago@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 11:13:18 by jazarago          #+#    #+#             */
-/*   Updated: 2024/12/18 16:51:49 by javierzarag      ###   ########.fr       */
+/*   Updated: 2025/01/09 11:55:47 by jazarago         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,10 @@ int	check_all_args(char **argv)
 		return (write(1, "Error in time to sleep.\n", 25));
 	if (argv[5] && (ft_mini_atoi(argv[5]) <= 0 || check_if_num(argv[5]) == 1))
 		return (write(1, "Error in number os meals for each philo.\n", 41));
-
 	return (0);
 }
 
-int check_if_num(char *str)
+int	check_if_num(char *str)
 {
 	int	i;
 
@@ -42,7 +41,7 @@ int check_if_num(char *str)
 	return (0);
 }
 
-int ft_mini_atoi(char *str)
+int	ft_mini_atoi(char *str)
 {
 	int	res;
 

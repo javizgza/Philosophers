@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: javierzaragozatejeda <javierzaragozatej    +#+  +:+       +#+         #
+#    By: jazarago <jazarago@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/18 10:12:42 by javierzarag       #+#    #+#              #
-#    Updated: 2024/12/18 11:11:35 by javierzarag      ###   ########.fr        #
+#    Updated: 2025/01/09 11:57:33 by jazarago         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,9 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
+
+valgrind: $(NAME)
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME) 4 410 200 200
 
 clean:
 	rm -f $(OBJS)
