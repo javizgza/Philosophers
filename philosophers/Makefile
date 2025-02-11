@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jazarago <jazarago@student.42.fr>          +#+  +:+       +#+         #
+#    By: javierzaragozatejeda <javierzaragozatej    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/18 10:12:42 by javierzarag       #+#    #+#              #
-#    Updated: 2025/01/09 11:57:33 by jazarago         ###   ########.fr        #
+#    Updated: 2025/02/04 16:47:21 by javierzarag      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,9 +21,6 @@ all: $(NAME)
 $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
 
-valgrind: $(NAME)
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME) 4 410 200 200
-
 clean:
 	rm -f $(OBJS)
 
@@ -31,6 +28,12 @@ fclean: clean
 	rm -f $(NAME)
 
 re: fclean all
+
+leaks:
+	valgrind --leak-check=full --show-leak-kinds=all ./$(NAME) 5 800 200 200
+
+leaks_macos:
+	leaks --atExit -- ./$(NAME) 5 399 200 200
 
 .PHONY: all clean fclean re
 

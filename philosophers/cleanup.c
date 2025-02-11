@@ -1,39 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: javierzaragozatejeda <javierzaragozatej    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/25 10:56:50 by jazarago          #+#    #+#             */
+/*   Created: 2025/01/07 16:17:58 by javierzarag       #+#    #+#             */
 /*   Updated: 2025/02/04 16:55:55 by javierzarag      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-int init_inputs(t_philoutils **inputs, char **argv)
+void clean_up(t_mutex *program, pthread_mutex_t *forks)
 {
-    *inputs = malloc(sizeof(t_philoutils) * ft_mini_atoi(argv[1]));
-    if (!*inputs)
-        return (1);
-    run_inputs(&(*inputs)[0], argv);
-    return (0);
-}
+	int	idx; // Declare at top
 
-int	main(int argc, char **argv)
-{	
-	t_philoutils	*inputs;
-	t_mutex			program;
-
-	if (argc != 5 && argc != 6)
-		return (write(2, "Wrong number of arguments.\n", 27));
-	if (check_all_args(argv) == 1) 
-		return (1);
-	if (init_inputs(&inputs, argv) == 1)
-		return (1);
-	run_program(&program, inputs);
-
-	free(inputs);
-	return (0);
+	idx = 0;
+	while (idx < program->philos_num)
+	{
+		pthread_mutex_destroy(&forks[idx]);
+		pthread_mutex_destroy(&program->philosophers[idx].meal_time_lock);
+		idx++;
+	}
+	free(forks);
+	pthread_mutex_destroy(program->dead_value_lock);
+	pthread_mutex_destroy(program->output_lock);
+	pthread_mutex_destroy(program->food_lock);
+	free(program->dead_value_lock);
+	free(program->output_lock);
+	free(program->food_lock);
 }
