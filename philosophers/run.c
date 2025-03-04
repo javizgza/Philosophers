@@ -6,7 +6,7 @@
 /*   By: javierzaragozatejeda <javierzaragozatej    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 11:55:57 by jazarago          #+#    #+#             */
-/*   Updated: 2025/02/04 16:55:55 by javierzarag      ###   ########.fr       */
+/*   Updated: 2025/03/04 19:55:32 by javierzarag      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,39 +91,51 @@ void    *philos_routine(void *arg)
 	{
 		pthread_mutex_lock(philosopher->program->dead_value_lock);
 		if (philosopher->program->death_value)
-			break ;
+		{
+			pthread_mutex_unlock(philosopher->program->dead_value_lock);
+			break;
+		}
 		pthread_mutex_unlock(philosopher->program->dead_value_lock);
-		if (philosopher->program->death_value)
-			break ;
 		precise_usleep(1);
+		pthread_mutex_lock(philosopher->program->dead_value_lock);
 		if (philosopher->program->death_value)
-			break ;
+		{
+			pthread_mutex_unlock(philosopher->program->dead_value_lock);
+			break;
+		}
+		pthread_mutex_unlock(philosopher->program->dead_value_lock);
 		pthread_mutex_lock(philosopher->right_fork);
-		if (philosopher->program->death_value)
-			break ;
 		pthread_mutex_lock(philosopher->left_fork);
-		if (philosopher->program->death_value)
-			break ;
 		pthread_mutex_lock(philosopher->print);
+		pthread_mutex_lock(philosopher->program->dead_value_lock);
 		if (philosopher->program->death_value)
-			break ;
+		{
+			pthread_mutex_unlock(philosopher->program->dead_value_lock);
+			pthread_mutex_unlock(philosopher->print);
+			pthread_mutex_unlock(philosopher->right_fork);
+			pthread_mutex_unlock(philosopher->left_fork);
+			break;
+		}
+		pthread_mutex_unlock(philosopher->program->dead_value_lock);
 		printf("%ld %d has taken a fork\n", get_elapsed_time(), philosopher->who);
 		printf("%ld %d has taken a fork\n", get_elapsed_time(), philosopher->who);
 		printf("%ld %d is eating\n", get_elapsed_time(), philosopher->who);
 		pthread_mutex_unlock(philosopher->print);
-		if (philosopher->program->death_value)
-			break ;
 		pthread_mutex_lock(&philosopher->meal_time_lock);
+		pthread_mutex_lock(philosopher->program->dead_value_lock);
 		if (philosopher->program->death_value)
-			break ;
+		{
+			pthread_mutex_unlock(philosopher->program->dead_value_lock);
+			pthread_mutex_unlock(&philosopher->meal_time_lock);
+			pthread_mutex_unlock(philosopher->right_fork);
+			pthread_mutex_unlock(philosopher->left_fork);
+			break;
+		}
+		pthread_mutex_unlock(philosopher->program->dead_value_lock);
 		philosopher->last_meal_time = get_current_time();
 		precise_usleep(philosopher->time_to_eat);
 		meals_eaten++;
-		if (philosopher->program->death_value)
-			break ;
 		pthread_mutex_unlock(&philosopher->meal_time_lock);
-		if (philosopher->program->death_value)
-			break ;
 		pthread_mutex_unlock(philosopher->right_fork);
 		pthread_mutex_unlock(philosopher->left_fork);
 		if (philosopher->meals != -1 && meals_eaten >= philosopher->meals)
@@ -133,27 +145,29 @@ void    *philos_routine(void *arg)
 			pthread_mutex_unlock(philosopher->program->dead_value_lock);
 			break;
 		}
-		if (philosopher->program->death_value)
-			break ;
 		pthread_mutex_lock(philosopher->print);
+		pthread_mutex_lock(philosopher->program->dead_value_lock);
 		if (philosopher->program->death_value)
-			break ;
+		{
+			pthread_mutex_unlock(philosopher->program->dead_value_lock);
+			pthread_mutex_unlock(philosopher->print);
+			break;
+		}
+		pthread_mutex_unlock(philosopher->program->dead_value_lock);
 		printf("%ld %d is sleeping\n", get_elapsed_time(), philosopher->who);
 		pthread_mutex_unlock(philosopher->print);
-		if (philosopher->program->death_value)
-			break ;
 		precise_usleep(philosopher->time_to_sleep);
-		if (philosopher->program->death_value)
-			break ;
 		pthread_mutex_lock(philosopher->print);
+		pthread_mutex_lock(philosopher->program->dead_value_lock);
 		if (philosopher->program->death_value)
-			break ;
+		{
+			pthread_mutex_unlock(philosopher->program->dead_value_lock);
+			pthread_mutex_unlock(philosopher->print);
+			break;
+		}
+		pthread_mutex_unlock(philosopher->program->dead_value_lock);
 		printf("%ld %d is thinking\n", get_elapsed_time(), philosopher->who);
 		pthread_mutex_unlock(philosopher->print);
-		if (philosopher->program->death_value)
-			break ;
-		if (philosopher->meals != -1 && meals_eaten >= philosopher->meals)
-			break;
 	}
 	pthread_mutex_unlock(philosopher->right_fork);
 	pthread_mutex_unlock(philosopher->left_fork);

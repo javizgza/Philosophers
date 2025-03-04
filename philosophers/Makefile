@@ -6,13 +6,14 @@
 #    By: javierzaragozatejeda <javierzaragozatej    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/18 10:12:42 by javierzarag       #+#    #+#              #
-#    Updated: 2025/02/04 16:47:21 by javierzarag      ###   ########.fr        #
+#    Updated: 2025/03/04 19:54:07 by javierzarag      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philosophers
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -fsanitize=thread -g -Wall -Wextra -Werror -pthread
+
 SRCS = main.c input_utils.c run.c 
 OBJS = $(SRCS:.c=.o)
 
