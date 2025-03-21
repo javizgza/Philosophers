@@ -6,7 +6,7 @@
 /*   By: javierzaragozatejeda <javierzaragozatej    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 11:55:57 by jazarago          #+#    #+#             */
-/*   Updated: 2025/03/04 19:55:32 by javierzarag      ###   ########.fr       */
+/*   Updated: 2025/03/21 11:27:10 by javierzarag      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,10 @@ void    *philos_routine(void *arg)
 	philosopher = (t_philoutils *)arg;
 	meals_eaten = 0;
 
+	pthread_mutex_lock(&philosopher->meal_time_lock);
 	philosopher->last_meal_time = get_current_time();
+	pthread_mutex_unlock(&philosopher->meal_time_lock);
+
 	if (philosopher->who % 2 != 0)
 		usleep(1000);
 	while (1)
@@ -169,8 +172,6 @@ void    *philos_routine(void *arg)
 		printf("%ld %d is thinking\n", get_elapsed_time(), philosopher->who);
 		pthread_mutex_unlock(philosopher->print);
 	}
-	pthread_mutex_unlock(philosopher->right_fork);
-	pthread_mutex_unlock(philosopher->left_fork);
 	return NULL;
 }
 
@@ -223,7 +224,9 @@ void    run_program(t_mutex *program, t_philoutils *inputs)
 		inputs[i].right_fork = &forks[i];
 		inputs[i].left_fork = &forks[(i + 1) % program->philos_num];
 		inputs[i].print = program->output_lock;
+		pthread_mutex_lock(&inputs[i].meal_time_lock);
 		inputs[i].last_meal_time = get_current_time();
+		pthread_mutex_unlock(&inputs[i].meal_time_lock);
 		inputs[i].program = program;
 		pthread_mutex_init(&inputs[i].meal_time_lock, NULL);
 		i++;
@@ -231,27 +234,28 @@ void    run_program(t_mutex *program, t_philoutils *inputs)
 
 	pthread_t monitor_thread;
 	pthread_create(&monitor_thread, NULL, death_logic, program);
-	i = 0;
-	while (i < program->philos_num)
-	{
-		pthread_t philosopher_thread;
-		pthread_create(&philosopher_thread, NULL, philos_routine, &program->philosophers[i]);
-		i++;
-	}
-	pthread_join(monitor_thread, NULL);
+
+	// Create an array to hold philosopher thread IDs
+	pthread_t *philos_threads = malloc(sizeof(pthread_t) * program->philos_num);
 
 	i = 0;
 	while (i < program->philos_num)
 	{
-		pthread_mutex_destroy(&forks[i]);
-		pthread_mutex_destroy(&inputs[i].meal_time_lock);
+		pthread_create(&philos_threads[i], NULL,
+			philos_routine, &program->philosophers[i]);
 		i++;
 	}
-	free(forks);
-	pthread_mutex_destroy(program->dead_value_lock);
-	pthread_mutex_destroy(program->output_lock);
-	pthread_mutex_destroy(program->food_lock);
-	free(program->dead_value_lock);
-	free(program->output_lock);
-	free(program->food_lock);
+
+	i = 0;
+	while (i < program->philos_num)
+	{
+		pthread_join(philos_threads[i], NULL);
+		i++;
+	}
+	free(philos_threads);
+
+	pthread_join(monitor_thread, NULL);
+
+	// Remove the duplicate calls that destroy/free forks or locks here
+	// Let cleanup.c handle it via clean_up(program, forks)
 }

@@ -6,11 +6,11 @@
 #    By: javierzaragozatejeda <javierzaragozatej    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/18 10:12:42 by javierzarag       #+#    #+#              #
-#    Updated: 2025/03/04 19:54:07 by javierzarag      ###   ########.fr        #
+#    Updated: 2025/03/21 11:05:21 by javierzarag      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = philosophers
+NAME = philo
 CC = gcc
 CFLAGS = -fsanitize=thread -g -Wall -Wextra -Werror -pthread
 
